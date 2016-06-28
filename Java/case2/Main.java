@@ -1,8 +1,6 @@
-import structures.*;
-import structures.Collection.TCollection;
-import structures.Collection.TCollectionItem;
 import structures.Dictionary.TDictionary;
 import structures.Dictionary.TPair;
+import structures.*;
 
 public class Main {
     private static void printList(TList<Integer> list) {
@@ -11,6 +9,14 @@ public class Main {
         }
         System.out.println("");
 
+    }
+
+    private static void printArray(TArray<Integer> array) {
+        for (int i = 0; i < array.getSize(); i++) {
+            Integer num = array.get(i);
+            System.out.print((num == null ? 0 : num) + ", ");
+        }
+        System.out.println("");
     }
 
     private static void testList() {
@@ -30,7 +36,7 @@ public class Main {
 
     }
 
-    private static void testBitArray(){
+    private static void testBitArray() {
         TBitArray bitArray = new TBitArray();
         bitArray.setElement(1, true);
         bitArray.setElement(2, true);
@@ -44,53 +50,51 @@ public class Main {
 //        System.out.println(bitArray.getElement(3));
     }
 
-    private static void testCircularBuffer(){
+    private static void testCircularBuffer() {
         TCircularBuffer buffer = new TCircularBuffer(5);
-        for (byte i = 0; i < 5; i++){
+        for (byte i = 0; i < 5; i++) {
             buffer.write(i);
         }
         buffer.read();
-        buffer.write((byte)5);
+        buffer.write((byte) 5);
         buffer.increaseSize(1);
-        buffer.write((byte)6);
+        buffer.write((byte) 6);
 
 
-
-
-        while(!buffer.isEmpty()){
+        while (!buffer.isEmpty()) {
             System.out.println("r: " + buffer.getReadPosition() + ", " + buffer.read());
         }
     }
 
-    private static void testStack(){
+    private static void testStack() {
         TStack<Integer> stack = new TStack<>();
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             stack.push(i);
         }
 
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             System.out.println(stack.pop());
         }
     }
 
-    private static void testProcessorStack(){
+    private static void testProcessorStack() {
         TProcessorStack processorStack = new TProcessorStack();
         processorStack.push(new byte[]{1, 2, 3});
         processorStack.newFrame();
         processorStack.push(new byte[]{1, 2, 3, 4});
 
-        for (byte b: processorStack.pop(7)){
+        for (byte b : processorStack.pop(7)) {
             System.out.println(b + ", ");
         }
         System.out.println(processorStack.getCurrentFrameStartIndex());
 
     }
 
-    private static void testArray(){
+    private static void testArray() {
         TArray<Integer> a = new TArray<>(5);
         TArray<Integer> b = new TArray<>(1);
 
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             a.add(i);
         }
         a.add(-1, 0);
@@ -98,13 +102,15 @@ public class Main {
         b.add(10);
         b.add(-20);
         a.copyTo(b, 1);
-        b.sort();
-        for (int i = 0; i < b.getSize(); i++){
-            System.out.println(b.get(i));
-        }
+        b.sort((o1, o2) -> {
+            int num1 = o1 == null ? 0 : o1;
+            int num2 = o2 == null ? 0 : o2;
+            return num1 - num2;
+        });
+        printArray(b);
     }
 
-    private static void testMatrix(){
+    private static void testMatrix() {
         TMatrix m1 = new TMatrix(2, 3);
         TMatrix m2 = new TMatrix(3, 4);
 
@@ -136,32 +142,16 @@ public class Main {
         System.out.println("");
     }
 
-    private static void testCollection(){
-        TCollection<Integer> collection = new TCollection<>();
-        TCollectionItem<Integer> item = new TCollectionItem<>(1, collection);
-        TCollectionItem<Integer> item1 = new TCollectionItem<>(-2, collection);
 
-        for (int i = 0; i < collection.getSize(); i++){
-            System.out.print(collection.get(i).getValue() + ", ");
-        }
-
-        System.out.println("");
-        collection.sort();
-
-        for (int i = 0; i < collection.getSize(); i++){
-            System.out.print(collection.get(i).getValue() + ", ");
-        }
-    }
-
-    private static void printDictionary(TDictionary<String, Integer> dictionary){
-        for (TPair<String, Integer> pair: dictionary){
+    private static void printDictionary(TDictionary<String, Integer> dictionary) {
+        for (TPair<String, Integer> pair : dictionary) {
             System.out.print(pair.getKey() + ":" + pair.getValue() + ", ");
         }
         System.out.println(dictionary.isSorted());
         System.out.println("");
     }
 
-    private static void testDictionary(){
+    private static void testDictionary() {
         TDictionary<String, Integer> dictionary = new TDictionary<>();
         dictionary.add("b", 1);
         dictionary.add("a", 100);
@@ -176,6 +166,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        testCollection();
+        testArray();
     }
 }

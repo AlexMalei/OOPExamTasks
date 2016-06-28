@@ -1,6 +1,8 @@
 package structures;
 
-public class TArray<T extends Comparable<? super T>> {
+import java.util.Comparator;
+
+public class TArray<T> {
     private enum ActionType{
         AT_ADD,
         AT_ACCESS
@@ -13,7 +15,8 @@ public class TArray<T extends Comparable<? super T>> {
 
     @SuppressWarnings("unchecked")
     public TArray(int size){
-        array = (T[])new Object[size];
+        used = size;
+        ensureCapacity(size);
     }
 
     public int getSize(){
@@ -43,10 +46,22 @@ public class TArray<T extends Comparable<? super T>> {
         used++;
     }
 
-    @SuppressWarnings("unchecked")
+    public void ensureCapacity(int minCapacity){
+        if (getReserved() < minCapacity){
+            expand(minCapacity);
+        }
+        used = minCapacity;
+    }
+
     private void expand(){
         int size = getSize();
-        T[] newArray = (T[])(new Comparable[(size == 0 ? 1 : size) * 2]);
+        expand((size == 0 ? 1 : size) * 2);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void expand(int newSize){
+        int size = getSize();
+        T[] newArray = (T[])(new Comparable[newSize]);
         if (array != null) {
             System.arraycopy(array, 0, newArray, 0, getSize());
         }
@@ -119,13 +134,13 @@ public class TArray<T extends Comparable<? super T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public void sort(){
+    public void sort(Comparator<T> comparator){
         int leadIndex;
         T temp;
         for (int i = 0; i < getSize() - 1; i++){
             leadIndex = i;
             for (int j = i + 1; j < getSize(); j++){
-                if (array[leadIndex].compareTo(array[j]) > 0){
+                if (comparator.compare(array[leadIndex], array[j]) > 0){
                     leadIndex = j;
                 }
             }
